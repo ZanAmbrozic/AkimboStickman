@@ -5,10 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class Player_Health : MonoBehaviour
 {
+    public int health = 100;
     // Update is called once per frame
     void Update()
     {
-        if (gameObject.transform.position.y < -7)
+        if (health <= 0)
         {
             Die();
         }
@@ -16,6 +17,6 @@ public class Player_Health : MonoBehaviour
 
     void Die()
     {
-        SceneManager.LoadScene("Prototype_1");
+        SceneManager.LoadScene("Game");
     }
 }

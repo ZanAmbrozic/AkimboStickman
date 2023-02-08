@@ -100,6 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   force: 20
+  destroyWhenOutOfCamera: 1
 --- !u!50 &2500374131919311556
 Rigidbody2D:
   serializedVersion: 4

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player_Move_Prop : MonoBehaviour
+public class Player_Move : MonoBehaviour
 {
     public int playerSpeed = 10;
     private bool _facingRight = true;

@@ -10,6 +10,7 @@ public class BulletScript : MonoBehaviour
     private Camera _camera;
     private GameObject _thisBullet;
     public float force;
+    public bool destroyWhenOutOfCamera = true;
 
     // Start is called before the first frame update
     void Start()
@@ -28,13 +29,14 @@ public class BulletScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        OutOfCamera();
+        if (destroyWhenOutOfCamera)
+            OutOfCamera();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.gameObject.CompareTag("Player"))
         {   
-            if(collision.gameObject.CompareTag("EnemyNPC"))
+            if (collision.gameObject.CompareTag("EnemyNPC"))
                 Destroy(collision.gameObject);
             Destroy(gameObject);
         }
