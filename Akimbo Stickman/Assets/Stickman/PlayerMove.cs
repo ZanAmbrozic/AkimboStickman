@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player_Move : MonoBehaviour
+public class PlayerMove : MonoBehaviour
 {
     public int playerSpeed = 10;
     private bool _facingRight = true;
@@ -13,10 +13,10 @@ public class Player_Move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PlayerMove();
+        PlayerMoveHandler();
     }
 
-    void PlayerMove()
+    void PlayerMoveHandler()
     {
         //CONTROLS
         _moveX = Input.GetAxis("Horizontal");
