@@ -8,9 +8,11 @@ public class BulletScript : MonoBehaviour
     private Vector3 _mousePos;
     private Rigidbody2D _rb;
     private Camera _camera;
-    private GameObject _thisBullet;
     public float force;
     public bool destroyWhenOutOfCamera = true;
+    public bool targetMouse = false;
+
+    public List<int> doNotHit;
 
     // Start is called before the first frame update
     void Start()
@@ -18,12 +20,21 @@ public class BulletScript : MonoBehaviour
 
         _camera = Camera.main;
         _rb = GetComponent<Rigidbody2D>();
-        _mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
-        Vector3 direction = _mousePos - transform.position;
-        Vector3 rotation = transform.position - _mousePos;
-        _rb.velocity = new Vector2(direction.x, direction.y).normalized * force;
-        float rot = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, rot + 90);
+
+        if (targetMouse)
+        {
+            _mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 direction = _mousePos - transform.position;
+            Vector3 rotation = transform.position - _mousePos;
+            _rb.velocity = new Vector2(direction.x, direction.y).normalized * force;
+            float rot = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0, 0, rot + 90);
+        }
+        else
+        {
+            _rb.velocity = transform.right * force;
+            transform.rotation = Quaternion.Euler(0, 0, 90);
+        }
     }
 
     // Update is called once per frame
@@ -32,9 +43,10 @@ public class BulletScript : MonoBehaviour
         if (destroyWhenOutOfCamera)
             OutOfCamera();
     }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.gameObject.CompareTag("Player"))
+        if (!doNotHit.Contains(collision.gameObject.transform.GetInstanceID())) //Checks if it should pass through the object
         {   
             if (collision.gameObject.CompareTag("EnemyNPC"))
                 Destroy(collision.gameObject);

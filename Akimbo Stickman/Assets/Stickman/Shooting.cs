@@ -25,9 +25,19 @@ public class Shooting : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && canFire)
         {
-            Instantiate(bullet, bulletTransform.position, Quaternion.identity);
+            canFire = false;
+            var firedBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
+
+            firedBullet.GetComponent<BulletScript>().targetMouse = true;
+
+            //Adds each parent to the list so it doesn't trigger collision
+            firedBullet.GetComponent<BulletScript>().doNotHit.Add(transform.GetInstanceID());
+            firedBullet.GetComponent<BulletScript>().doNotHit.Add(transform.parent.GetInstanceID());
+            firedBullet.GetComponent<BulletScript>().doNotHit.Add(transform.parent.parent.GetInstanceID());
+            firedBullet.GetComponent<BulletScript>().doNotHit.Add(transform.parent.parent.parent.GetInstanceID());
+
         }
     }
 }

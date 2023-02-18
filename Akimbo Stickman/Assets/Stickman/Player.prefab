@@ -177,7 +177,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8540f8476589f284aa57185abe5b5408, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHealth: {fileID: 0}
+  canActivate: 1
+  cooldown: 3
 --- !u!1 &4685733937246442290
 GameObject:
   m_ObjectHideFlags: 0
