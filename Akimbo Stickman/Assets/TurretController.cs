@@ -5,20 +5,67 @@ using UnityEngine;
 public class TurretController : MonoBehaviour
 {
     public GameObject bullet;
-    public Transform bulletTransform;
+    public Transform firePoint;
     public bool canFire = true;
     public float fireRate;
     public bool canFireBurst;
     public float burstFireRate;
 
+    public ParticleSystem dropParticles;
+    public Transform dropParticlesPoint;
+
     private int _bulletCount = 0;
     private float _timer;
     private float _burstTimer;
 
+    private bool isGrounded = false;
+
+    [HideInInspector] public bool facingRight = true;
+
+    [HideInInspector] public List<int> doNotShoot;
+
+
+    private void Start()
+    {
+        if (!facingRight)
+        {
+            transform.Rotate(0f, 180f, 0f);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        if (!isGrounded && col.gameObject.CompareTag("ground"))
+        {
+
+            Instantiate(dropParticles, dropParticlesPoint.position, Quaternion.identity);
+
+            isGrounded = true;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        FireRoutine();
+
+        if (DetectEnemy())
+        {
+            FireRoutine();
+        }
+        
+    }
+
+    private bool DetectEnemy()
+    {
+        Vector2 direction = transform.right;
+
+        RaycastHit2D hit = Physics2D.Raycast(firePoint.position, direction);
+
+        if (doNotShoot.Contains(hit.collider.transform.GetInstanceID()))
+        {
+            return false;
+        }
+        return true;
     }
 
     private void FireRoutine()
@@ -66,7 +113,7 @@ public class TurretController : MonoBehaviour
 
     private void Fire()
     {
-        var firedBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
+        var firedBullet = Instantiate(bullet, firePoint.position, firePoint.rotation);
         firedBullet.GetComponent<BulletScript>().destroyWhenOutOfCamera = false;
 
         //Adds each parent to the list so it doesn't trigger collision

@@ -10,9 +10,9 @@ public class BulletScript : MonoBehaviour
     private Camera _camera;
     public float force;
     public bool destroyWhenOutOfCamera = true;
-    public bool targetMouse = false;
+    [HideInInspector] public bool targetMouse = false;
 
-    public List<int> doNotHit;
+    [HideInInspector] public List<int> doNotHit;
 
     // Start is called before the first frame update
     void Start()

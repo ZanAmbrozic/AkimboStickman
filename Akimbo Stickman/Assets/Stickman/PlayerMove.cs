@@ -5,10 +5,15 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     public int playerSpeed = 10;
-    private bool _facingRight = true;
+    [HideInInspector] public bool facingRight;
     public int playerJumpPower = 1250;
     private float _moveX;
     public bool isGrounded;
+
+    private void Start()
+    {
+        facingRight = true;
+    }
 
     // Update is called once per frame
     void Update()
@@ -26,9 +31,9 @@ public class PlayerMove : MonoBehaviour
         //ANIMATIONS
 
         //PLAYER DIRECTION
-        if (_moveX < 0.0f && _facingRight == true)
+        if (_moveX < 0.0f && facingRight == true)
             FlipPlayer();
-        else if (_moveX > 0.0f && _facingRight == false)
+        else if (_moveX > 0.0f && facingRight == false)
             FlipPlayer();
 
         //PHYSICS
@@ -43,7 +48,7 @@ public class PlayerMove : MonoBehaviour
 
     void FlipPlayer()
     {
-        _facingRight = !_facingRight;
+        facingRight = !facingRight;
 
         transform.Rotate(0f, 180f, 0);
     }
