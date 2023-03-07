@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pivot : MonoBehaviour
+public class ChampPivot : MonoBehaviour
 {
     private GameObject _player;
 
@@ -21,13 +22,13 @@ public class Pivot : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(0f, 0f, rotationZ);
 
-        if(rotationZ < -90 || rotationZ > 90)
+        if (rotationZ < -90 || rotationZ > 90)
         {
-            if(Mathf.Round(_player.transform.eulerAngles.y) == 0)
+            if (Mathf.Round(_player.transform.eulerAngles.y) == 0)
             {
                 transform.localRotation = Quaternion.Euler(180, 0, -rotationZ);
             }
-            else if(Mathf.Round(_player.transform.eulerAngles.y) == 180)
+            else if (Mathf.Abs(Mathf.Round(_player.transform.eulerAngles.y)) == 180)
             {
                 transform.localRotation = Quaternion.Euler(180, 180, -rotationZ);
             }

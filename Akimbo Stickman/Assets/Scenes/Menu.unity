@@ -605,6 +605,9 @@ MonoBehaviour:
   - prefab: {fileID: 4685733937124102926, guid: 72eaf65eb9b5fb240a109d47cbb249a6, type: 3}
     name: Akimbo
     icon: {fileID: 21300000, guid: 6e936338be7c00040b8185dbdbde72e9, type: 3}
+  - prefab: {fileID: 4685733937124102926, guid: f00e0959efd928a4ea44ead99e901a70, type: 3}
+    name: Champ
+    icon: {fileID: 21300000, guid: 676699c8e2cfb9d42b05d51afe1a5892, type: 3}
   currentCharacter:
     prefab: {fileID: 0}
     name: 
