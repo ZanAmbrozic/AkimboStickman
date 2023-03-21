@@ -7,6 +7,7 @@ public class GloveScript : MonoBehaviour
     private Vector3 _mousePos;
     private Rigidbody2D _rb;
     private Camera _camera;
+    private int _dmg;
     public float force;
     [HideInInspector] public bool targetMouse = false;
 
@@ -15,7 +16,7 @@ public class GloveScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        _dmg = 50;
         _camera = Camera.main;
         _rb = GetComponent<Rigidbody2D>();
 
@@ -39,6 +40,14 @@ public class GloveScript : MonoBehaviour
     {
         if (!doNotHit.Contains(collision.gameObject.transform.GetInstanceID())) //Checks if it should pass through the object
         {
+            if (collision.TryGetComponent<HealthComponent>(out HealthComponent healthComponent))
+            {
+                if (healthComponent.DealDamage(_dmg) == false)
+                {
+                    Destroy(collision.gameObject);
+                }
+            }
+
             Destroy(gameObject);
         }
     }

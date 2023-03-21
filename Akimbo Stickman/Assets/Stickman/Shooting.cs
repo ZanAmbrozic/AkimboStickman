@@ -31,6 +31,7 @@ public class Shooting : MonoBehaviour
             var firedBullet = Instantiate(bullet, bulletTransform.position, Quaternion.identity);
 
             firedBullet.GetComponent<BulletScript>().targetMouse = true;
+            firedBullet.GetComponent<BulletScript>().dmg = 10;
 
             //Adds each parent to the list so it doesn't trigger collision
             firedBullet.GetComponent<BulletScript>().doNotHit.Add(transform.GetInstanceID());

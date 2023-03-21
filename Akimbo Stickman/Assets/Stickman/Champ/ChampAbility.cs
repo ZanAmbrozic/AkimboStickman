@@ -21,7 +21,6 @@ public class ChampAbility : MonoBehaviour
     {
         if (Input.GetButtonDown("Ability1") && _abilityManager.canActivate)
         {
-            Debug.Log("Ability");
             GloveSpawn();
         }
     }

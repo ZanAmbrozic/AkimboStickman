@@ -14,11 +14,13 @@ public class ChampAttack : MonoBehaviour
     private float _timer;
     private Vector2 _playerPos;
     private Vector2 _attackSize;
+    private int _maxDmg;
 
     private void Start()
     {
         _attackSize = attackArea.GetComponent<Renderer>().bounds.size;
         _camera = Camera.main;
+        _maxDmg = 10;
     }
 
     // Update is called once per frame
@@ -45,7 +47,26 @@ public class ChampAttack : MonoBehaviour
 
             
             _playerPos = transform.position;
-            RaycastHit2D[] hit = Physics2D.BoxCastAll(_playerPos, _attackSize, rot, direction, _attackSize.x);
+            RaycastHit2D[] hits = Physics2D.BoxCastAll(_playerPos, _attackSize, rot, direction, _attackSize.x);
+
+            foreach(var hit in hits)
+            {
+                if (hit.transform.GetInstanceID() == transform.parent.parent.parent.GetInstanceID()) //Filters out itself
+                    continue;
+
+                Debug.Log("Name: " + hit.collider.gameObject.name + ", Distance: " + hit.distance);
+
+                if (hit.collider.TryGetComponent<HealthComponent>(out HealthComponent healthComponent))
+                {
+                    int trueDmg = Mathf.RoundToInt(_maxDmg - (hit.distance * 2));
+                    Debug.Log("Dmg: " + trueDmg);
+                    if (healthComponent.DealDamage(trueDmg) == false)
+                    {
+                        Destroy(hit.collider.gameObject);
+                    }
+                }
+            }
+
             _ = BoxCast(_playerPos, _attackSize, rot, direction, _attackSize.x);
 
 

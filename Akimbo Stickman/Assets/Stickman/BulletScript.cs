@@ -12,6 +12,7 @@ public class BulletScript : MonoBehaviour
     public bool destroyWhenOutOfCamera = true;
     [HideInInspector] public bool targetMouse = false;
 
+    [HideInInspector] public int dmg = 10;
     [HideInInspector] public List<int> doNotHit;
 
     // Start is called before the first frame update
@@ -47,9 +48,14 @@ public class BulletScript : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!doNotHit.Contains(collision.gameObject.transform.GetInstanceID())) //Checks if it should pass through the object
-        {   
-            if (collision.gameObject.CompareTag("EnemyNPC"))
-                Destroy(collision.gameObject);
+        {
+            if (collision.TryGetComponent<HealthComponent>(out HealthComponent healthComponent))
+            {
+                if(healthComponent.DealDamage(dmg) == false)
+                {
+                    Destroy(collision.gameObject);
+                }
+            }
             Destroy(gameObject);
         }
 

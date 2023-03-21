@@ -17,6 +17,7 @@ public class AkimboAbility : MonoBehaviour
         _abilityManager = GetComponent<PlayerAbilityManager>();
         _turretSize = turret.GetComponent<BoxCollider2D>().size * turret.transform.localScale;
         _boxCollider = GetComponent<BoxCollider2D>();
+        isActive = false;
     }
 
     void Update()
@@ -27,6 +28,11 @@ public class AkimboAbility : MonoBehaviour
         {
             Debug.Log("Ability");
             TurretSpawn();
+        }
+
+        if (isActive != _abilityManager.abilityActive)
+        {
+            _abilityManager.abilityActive = isActive;
         }
     }
 
@@ -45,7 +51,6 @@ public class AkimboAbility : MonoBehaviour
                 true => new Vector2(playerPos.x + (3 * _turretSize.y), playerPos.y),
                 false => new Vector2(playerPos.x - (3 * _turretSize.y), playerPos.y)
             };
-            Debug.Log(spawnPos);
 
 
             var turretInstance = Instantiate(turret, spawnPos, Quaternion.identity);
@@ -53,8 +58,10 @@ public class AkimboAbility : MonoBehaviour
             var turretController = turretInstance.GetComponent<TurretController>();
             turretController.doNotShoot.Add(transform.GetInstanceID());
             turretController.facingRight = playerFacingRight;
+            turretController.creator = this.gameObject;
 
             _abilityManager.abilityActive = true;
+            isActive = true;
             _abilityManager.canActivate = false;
         }
     }

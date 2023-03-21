@@ -11,8 +11,12 @@ public class TurretController : MonoBehaviour
     public bool canFireBurst;
     public float burstFireRate;
 
+    public GameObject creator;
+
     public ParticleSystem dropParticles;
     public Transform dropParticlesPoint;
+
+    public ParticleSystem destroyParticles;
 
     private int _bulletCount = 0;
     private float _timer;
@@ -38,10 +42,16 @@ public class TurretController : MonoBehaviour
         if (!isGrounded && col.gameObject.CompareTag("ground"))
         {
 
-            Instantiate(dropParticles, dropParticlesPoint.position, Quaternion.identity);
+            _ = Instantiate(dropParticles, dropParticlesPoint.position, Quaternion.identity);
 
             isGrounded = true;
         }
+    }
+
+    private void OnDestroy()
+    {
+        _ = Instantiate(destroyParticles, transform.position, Quaternion.identity);
+        creator.GetComponent<AkimboAbility>().isActive = false;
     }
 
     // Update is called once per frame
@@ -114,9 +124,12 @@ public class TurretController : MonoBehaviour
     private void Fire()
     {
         var firedBullet = Instantiate(bullet, firePoint.position, firePoint.rotation);
-        firedBullet.GetComponent<BulletScript>().destroyWhenOutOfCamera = false;
+
+        var bulletScript = firedBullet.GetComponent<BulletScript>();
+        bulletScript.destroyWhenOutOfCamera = false;
+        bulletScript.dmg = 5;
 
         //Adds each parent to the list so it doesn't trigger collision
-        firedBullet.GetComponent<BulletScript>().doNotHit.Add(transform.GetInstanceID());
+        bulletScript.doNotHit.Add(transform.GetInstanceID());
     }
 }
