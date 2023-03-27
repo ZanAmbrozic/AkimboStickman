@@ -32,6 +32,7 @@ public class Shooting : MonoBehaviour
 
             firedBullet.GetComponent<BulletScript>().targetMouse = true;
             firedBullet.GetComponent<BulletScript>().dmg = 10;
+            firedBullet.GetComponent<BulletScript>().destroyWhenOutOfCamera = false;
 
             //Adds each parent to the list so it doesn't trigger collision
             firedBullet.GetComponent<BulletScript>().doNotHit.Add(transform.GetInstanceID());

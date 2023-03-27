@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EnemyMove : MonoBehaviour
@@ -16,16 +17,18 @@ public class EnemyMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(xMoveDirection, 0));
+        RaycastHit2D[] hit = Physics2D.RaycastAll(transform.position, new Vector2(xMoveDirection, 0));
         gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(xMoveDirection, 0) * enemySpeed;
-        if(hit.distance < 0.7f)
+        if (hit.Length >= 1)
         {
-            Flip();
+            if (hit[1].distance < 0.7f)
+            {
+                Flip();
+            }
         }
-
-        void Flip()
-        {
-            xMoveDirection *= -1;
-        }
+    }
+    void Flip()
+    {
+        xMoveDirection *= -1;
     }
 }

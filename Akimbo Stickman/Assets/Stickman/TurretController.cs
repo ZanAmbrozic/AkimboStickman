@@ -50,6 +50,9 @@ public class TurretController : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (!this.gameObject.scene.isLoaded)
+            return;
+
         _ = Instantiate(destroyParticles, transform.position, Quaternion.identity);
         creator.GetComponent<AkimboAbility>().isActive = false;
     }
