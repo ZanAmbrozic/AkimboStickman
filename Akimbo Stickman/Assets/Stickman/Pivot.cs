@@ -1,14 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Pivot : MonoBehaviour
+public class Pivot : NetworkBehaviour
 {
     private GameObject _player;
 
     private void Start()
     {
         _player = transform.parent.gameObject;
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner)
+        {
+            enabled = false;
+        }
     }
 
     private void FixedUpdate()

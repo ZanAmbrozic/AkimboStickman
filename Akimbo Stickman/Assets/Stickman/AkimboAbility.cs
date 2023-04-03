@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class AkimboAbility : MonoBehaviour
+public class AkimboAbility : NetworkBehaviour
 {
     public bool isActive;
     public GameObject turret;
@@ -22,12 +23,16 @@ public class AkimboAbility : MonoBehaviour
 
     void Update()
     {
-        //Vector2 direction = facingRight ? transform.right : -transform.right;
+        if (!IsOwner)
+        {
+            return;
+        }
 
         if (Input.GetButtonDown("Ability1") && _abilityManager.canActivate)
         {
             Debug.Log("Ability");
-            TurretSpawn();
+            RequestSpawnServerRpc(_boxCollider.transform.position, GetComponent<PlayerMove>().facingRight);
+
         }
 
         if (isActive != _abilityManager.abilityActive)
@@ -36,15 +41,27 @@ public class AkimboAbility : MonoBehaviour
         }
     }
 
-    private void TurretSpawn()
+    [ServerRpc]
+    private void RequestSpawnServerRpc(Vector2 pos, bool facingRight)
     {
-        playerPos = _boxCollider.transform.position;
+        SpawnClientRpc(pos, facingRight);
+    }
+
+    [ClientRpc]
+    private void SpawnClientRpc(Vector2 pos, bool facingRight)
+    {
+        TurretSpawn(pos, facingRight);
+    }
+
+    private void TurretSpawn(Vector2 pos, bool facingRight)
+    {
+        playerPos = pos;
         RaycastHit2D[] hit = Physics2D.BoxCastAll(playerPos, _turretSize, 0f, transform.right, 3 * _turretSize.y);
         _ = BoxCast(playerPos, _turretSize, 0f, transform.right, 3 * _turretSize.y);
 
         if (hit.Length <= 1)
         {
-            bool playerFacingRight = GetComponent<PlayerMove>().facingRight;
+            bool playerFacingRight = facingRight;
 
             Vector2 spawnPos = playerFacingRight switch         //Location is the same as in the end of raycast
             {
@@ -56,7 +73,7 @@ public class AkimboAbility : MonoBehaviour
             var turretInstance = Instantiate(turret, spawnPos, Quaternion.identity);
 
             var turretController = turretInstance.GetComponent<TurretController>();
-            turretController.doNotShoot.Add(transform.GetInstanceID());
+            turretController.doNotShoot.Add(OwnerClientId);
             turretController.facingRight = playerFacingRight;
             turretController.creator = this.gameObject;
 

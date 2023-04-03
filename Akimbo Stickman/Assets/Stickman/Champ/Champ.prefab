@@ -12,10 +12,13 @@ GameObject:
   - component: {fileID: 4685733937124102923}
   - component: {fileID: 4685733937124102922}
   - component: {fileID: 4685733937124102921}
+  - component: {fileID: 3380271569489075540}
   - component: {fileID: 4685733937124102933}
   - component: {fileID: 4685733937124102934}
   - component: {fileID: 224925516}
-  - component: {fileID: 3380271569489075540}
+  - component: {fileID: 7678138706087030846}
+  - component: {fileID: 874329975582596552}
+  - component: {fileID: 4164916204204732042}
   m_Layer: 0
   m_Name: Champ
   m_TagString: Player
@@ -139,6 +142,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &3380271569489075540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4685733937124102926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3422f52f7b8f500408f3059f63476e7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  health: 100
+  healthBar: {fileID: 8482205424279394536}
 --- !u!114 &4685733937124102933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,7 +204,7 @@ MonoBehaviour:
   isActive: 0
   glove: {fileID: 1255563932833669594, guid: 5657526ac3cf07547845c0e3f52805b5, type: 3}
   shootingPoint: {fileID: 4685733938712951054}
---- !u!114 &3380271569489075540
+--- !u!114 &7678138706087030846
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -195,12 +213,51 @@ MonoBehaviour:
   m_GameObject: {fileID: 4685733937124102926}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3422f52f7b8f500408f3059f63476e7b, type: 3}
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  health: 100
-  healthBar: {fileID: 8482205424279394536}
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &874329975582596552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4685733937124102926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 0
+  SyncRotAngleX: 0
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 0
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 0
+  Interpolate: 0
+--- !u!114 &4164916204204732042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4685733937124102926}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f87cf59535f6b7c4ba139fe7cd30c725, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4685733937246442290
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,6 +268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4685733937246442291}
   - component: {fileID: 1731316197}
+  - component: {fileID: 1976978618852176436}
   m_Layer: 0
   m_Name: ArmPivot
   m_TagString: Untagged
@@ -246,6 +304,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afa433340e4f6b24eb46cbf6c20328dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1976978618852176436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4685733937246442290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 0
+  SyncRotAngleX: 0
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 0
+  Interpolate: 0
 --- !u!1 &4685733937804561256
 GameObject:
   m_ObjectHideFlags: 0

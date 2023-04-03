@@ -101,6 +101,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   force: 20
   destroyWhenOutOfCamera: 1
+  targetMouse: 0
+  dmg: 10
+  doNotHit: 
 --- !u!50 &2500374131919311556
 Rigidbody2D:
   serializedVersion: 4

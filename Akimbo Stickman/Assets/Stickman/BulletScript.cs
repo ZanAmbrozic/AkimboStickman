@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Unity.Netcode;
 
 public class BulletScript : MonoBehaviour
 {
@@ -14,6 +15,11 @@ public class BulletScript : MonoBehaviour
 
     [HideInInspector] public int dmg = 10;
     [HideInInspector] public List<int> doNotHit;
+    [HideInInspector] public ulong ownerID = 10000;
+
+    private Vector3 _rotation;
+    private Vector3 _direction;
+
 
     // Start is called before the first frame update
     void Start()
@@ -24,11 +30,11 @@ public class BulletScript : MonoBehaviour
 
         if (targetMouse)
         {
-            _mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
-            Vector3 direction = _mousePos - transform.position;
-            Vector3 rotation = transform.position - _mousePos;
-            _rb.velocity = new Vector2(direction.x, direction.y).normalized * force;
-            float rot = Mathf.Atan2(rotation.y, rotation.x) * Mathf.Rad2Deg;
+            //_mousePos = _camera.ScreenToWorldPoint(Input.mousePosition);
+            //Vector3 direction = _mousePos - transform.position;
+            ////Vector3 rotation = transform.position - _mousePos;
+            _rb.velocity = new Vector2(_direction.x, _direction.y).normalized * force;
+            float rot = Mathf.Atan2(_rotation.y, _rotation.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, 0, rot + 90);
         }
         else
@@ -36,6 +42,12 @@ public class BulletScript : MonoBehaviour
             _rb.velocity = transform.right * force;
             transform.rotation = Quaternion.Euler(0, 0, 90);
         }
+    }
+
+    public void Init(Vector3 direction, Vector3 rotation)
+    {
+        _direction = direction;
+        _rotation = rotation;
     }
 
     // Update is called once per frame
@@ -47,8 +59,15 @@ public class BulletScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!doNotHit.Contains(collision.gameObject.transform.GetInstanceID())) //Checks if it should pass through the object
+        if(collision.gameObject.TryGetComponent<NetworkObject>(out var colNetCmp))
         {
+            Debug.Log("Owner: " + ownerID);
+            if (colNetCmp.OwnerClientId == ownerID)
+                return;
+        }
+
+        //else //Checks if it should pass through the object
+        //{
             if (collision.TryGetComponent<HealthComponent>(out HealthComponent healthComponent))
             {
                 if(healthComponent.DealDamage(dmg) == false)
@@ -57,7 +76,7 @@ public class BulletScript : MonoBehaviour
                 }
             }
             Destroy(gameObject);
-        }
+        //}
 
     }
 

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
+using System;
 
 public class TurretController : MonoBehaviour
 {
@@ -10,8 +12,6 @@ public class TurretController : MonoBehaviour
     public float fireRate;
     public bool canFireBurst;
     public float burstFireRate;
-
-    public GameObject creator;
 
     public ParticleSystem dropParticles;
     public Transform dropParticlesPoint;
@@ -24,9 +24,11 @@ public class TurretController : MonoBehaviour
 
     private bool isGrounded = false;
 
+    [HideInInspector] public GameObject creator;
+
     [HideInInspector] public bool facingRight = true;
 
-    [HideInInspector] public List<int> doNotShoot;
+    [HideInInspector] public List<ulong> doNotShoot;
 
 
     private void Start()
@@ -55,6 +57,8 @@ public class TurretController : MonoBehaviour
 
         _ = Instantiate(destroyParticles, transform.position, Quaternion.identity);
         creator.GetComponent<AkimboAbility>().isActive = false;
+
+        Debug.Log("Turret owner: " + creator.GetComponent<NetworkObject>().OwnerClientId);
     }
 
     // Update is called once per frame
@@ -74,7 +78,7 @@ public class TurretController : MonoBehaviour
 
         RaycastHit2D hit = Physics2D.Raycast(firePoint.position, direction);
 
-        if (doNotShoot.Contains(hit.collider.transform.GetInstanceID()))
+        if (hit.collider.gameObject == creator)
         {
             return false;
         }
@@ -131,8 +135,9 @@ public class TurretController : MonoBehaviour
         var bulletScript = firedBullet.GetComponent<BulletScript>();
         bulletScript.destroyWhenOutOfCamera = false;
         bulletScript.dmg = 5;
+        bulletScript.ownerID = 10000;
 
         //Adds each parent to the list so it doesn't trigger collision
-        bulletScript.doNotHit.Add(transform.GetInstanceID());
+        //bulletScript.doNotHit.Add(transform.GetInstanceID());
     }
 }

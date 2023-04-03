@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-public class ChampAttack : MonoBehaviour
+public class ChampAttack : NetworkBehaviour
 {
     public bool canFire;
     public float fireRate;
@@ -16,6 +18,7 @@ public class ChampAttack : MonoBehaviour
     private Vector2 _attackSize;
     private int _maxDmg;
 
+  
     private void Start()
     {
         _attackSize = attackArea.GetComponent<Renderer>().bounds.size;
@@ -26,6 +29,11 @@ public class ChampAttack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!IsOwner)
+        {
+            return;
+        }
+
         if (!canFire)
         {
             _timer += Time.deltaTime;
@@ -47,25 +55,33 @@ public class ChampAttack : MonoBehaviour
 
             
             _playerPos = transform.position;
-            RaycastHit2D[] hits = Physics2D.BoxCastAll(_playerPos, _attackSize, rot, direction, _attackSize.x);
+            RequestAttackServerRpc(_playerPos, _attackSize, rot, direction, _attackSize.x, transform.parent.parent.parent.GetComponent<NetworkObject>().OwnerClientId);
 
-            foreach(var hit in hits)
-            {
-                if (hit.transform.GetInstanceID() == transform.parent.parent.parent.GetInstanceID()) //Filters out itself
-                    continue;
 
-                Debug.Log("Name: " + hit.collider.gameObject.name + ", Distance: " + hit.distance);
+            //MOVED TO ServerRPC
+            //RaycastHit2D[] hits = Physics2D.BoxCastAll(_playerPos, _attackSize, rot, direction, _attackSize.x);
 
-                if (hit.collider.TryGetComponent<HealthComponent>(out HealthComponent healthComponent))
-                {
-                    int trueDmg = Mathf.RoundToInt(_maxDmg - (hit.distance * 2));
-                    Debug.Log("Dmg: " + trueDmg);
-                    if (healthComponent.DealDamage(trueDmg) == false)
-                    {
-                        Destroy(hit.collider.gameObject);
-                    }
-                }
-            }
+            //foreach(var hit in hits)
+            //{
+            //    if (hit.collider.gameObject.TryGetComponent<NetworkObject>(out var hitNetCmp)) //Filters out itself
+            //    {
+            //        if (hitNetCmp.OwnerClientId == transform.parent.parent.parent.GetComponent<NetworkObject>().OwnerClientId)
+            //            continue;
+            //    }
+                    
+
+            //    Debug.Log("Name: " + hit.collider.gameObject.name + ", Distance: " + hit.distance);
+
+            //    if (hit.collider.TryGetComponent<HealthComponent>(out HealthComponent healthComponent))
+            //    {
+            //        int trueDmg = Mathf.RoundToInt(_maxDmg - (hit.distance * 2));
+            //        Debug.Log("Dmg: " + trueDmg);
+            //        if (healthComponent.DealDamage(trueDmg) == false)
+            //        {
+            //            Destroy(hit.collider.gameObject);
+            //        }
+            //    }
+            //}
 
             _ = BoxCast(_playerPos, _attackSize, rot, direction, _attackSize.x);
 
@@ -74,9 +90,70 @@ public class ChampAttack : MonoBehaviour
             Quaternion q = Quaternion.AngleAxis(rot, new Vector3(0, 0, 1));
             spawnPos = q * spawnPos;
             spawnPos += _playerPos;
-            _ = Instantiate(attackArea, spawnPos, Quaternion.Euler(0, 0, rot));
+
+            RequestSpawnServerRpc(spawnPos, Quaternion.Euler(0, 0, rot));
+            //_ = Instantiate(attackArea, spawnPos, Quaternion.Euler(0, 0, rot));
         }
     }
+
+    [ServerRpc]
+    private void RequestSpawnServerRpc(Vector3 dir, Quaternion rot)
+    {
+        SpawnClientRpc(dir, rot);
+    }
+
+    [ClientRpc]
+    private void SpawnClientRpc(Vector3 dir, Quaternion rot)
+    {
+        SpawnObject(dir, rot);
+    }
+
+    private void SpawnObject(Vector3 dir, Quaternion rot)
+    {
+        _ = Instantiate(attackArea, dir, rot);
+    }
+
+
+
+    [ServerRpc]
+    private void RequestAttackServerRpc(Vector2 origin, Vector2 size, float angle, Vector2 direction, float distance, ulong owner)
+    {
+        AttackClientRpc(origin, size, angle, direction, distance, owner);
+    }
+
+    [ClientRpc]
+    private void AttackClientRpc(Vector2 origin, Vector2 size, float angle, Vector2 direction, float distance, ulong owner)
+    {
+        Attack(origin, size, angle, direction, distance, owner);
+    }
+
+    private void Attack(Vector2 origin, Vector2 size, float angle, Vector2 direction, float distance, ulong owner)
+    {
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(origin, size, angle, direction, distance);
+
+        foreach (var hit in hits)
+        {
+            if (hit.collider.gameObject.TryGetComponent<NetworkObject>(out var hitNetCmp)) //Filters out itself
+            {
+                if (hitNetCmp.OwnerClientId == owner)
+                    continue;
+            }
+
+
+            Debug.Log("Name: " + hit.collider.gameObject.name + ", Distance: " + hit.distance);
+
+            if (hit.collider.TryGetComponent<HealthComponent>(out HealthComponent healthComponent))
+            {
+                int trueDmg = Mathf.RoundToInt(_maxDmg - (hit.distance * 2));
+                Debug.Log("Dmg: " + trueDmg);
+                if (healthComponent.DealDamage(trueDmg) == false)
+                {
+                    Destroy(hit.collider.gameObject);
+                }
+            }
+        }
+    }
+
 
     static public RaycastHit2D BoxCast(Vector2 origen, Vector2 size, float angle, Vector2 direction, float distance) //Makes a boxcast visible
     {

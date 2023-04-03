@@ -1,14 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : NetworkBehaviour
 {
     public int playerSpeed = 10;
     [HideInInspector] public bool facingRight;
     public int playerJumpPower = 1250;
     private float _moveX;
     public bool isGrounded;
+
+
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner)
+        {
+            enabled = false;
+        }
+    }
 
     private void Start()
     {

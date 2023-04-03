@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthComponent : MonoBehaviour
+public class HealthComponent : NetworkBehaviour
 {
     public int maxHealth;
     public int health;
@@ -14,6 +15,16 @@ public class HealthComponent : MonoBehaviour
     {
         health = maxHealth;
         healthBar.SetHealth(health, maxHealth);
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        health = maxHealth;
+        healthBar.SetHealth(health, maxHealth);
+        if (!IsOwner)
+        {
+            enabled = false;
+        }
     }
 
     /// <summary>
