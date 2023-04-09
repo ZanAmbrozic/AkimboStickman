@@ -25,6 +25,6 @@ public class IPValidator : MonoBehaviour
         }
         ip = inputField.text;
 
-        DataManager.instance.SetIPAdress(ip);
+        DataManager.instance.SetIPAddress(ip);
     }
 }

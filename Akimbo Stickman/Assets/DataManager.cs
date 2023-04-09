@@ -7,6 +7,7 @@ public class DataManager : MonoBehaviour
     public static DataManager instance;
     public NetOptions netOptions = new NetOptions();
     public string connType;
+    private ulong _winner;
 
     private void Awake()
     {
@@ -27,8 +28,14 @@ public class DataManager : MonoBehaviour
         netOptions.port = port;
     }
 
-    public void SetIPAdress(string ip)
+    public void SetIPAddress(string ip)
     {
-        netOptions.ipAdress = ip;
+        netOptions.ipAddress = ip;
+    }
+
+    public ulong Winner
+    {
+        get { return _winner; }
+        set { _winner = value; }
     }
 }

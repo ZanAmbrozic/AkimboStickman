@@ -10,11 +10,16 @@ public class NetValuesAssign : MonoBehaviour
     void Start()
     {
         string connType = DataManager.instance.connType;
-        string ipAdress = DataManager.instance.netOptions.ipAdress;
+        string ipAddress = DataManager.instance.netOptions.ipAddress;
         ushort port = DataManager.instance.netOptions.port;
-        
 
-        if(connType == "Host")
+        NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(
+            ipAddress,  // The IP address is a string
+            port, // The port number is an unsigned short
+            "0.0.0.0" // The server listen address is a string.
+        );
+
+        if (connType == "Host")
         {
             GameObject playerPrefab = GameManager.instance.currentCharacter.prefab;
             NetworkManager.Singleton.NetworkConfig.PlayerPrefab = playerPrefab;
@@ -24,12 +29,6 @@ public class NetValuesAssign : MonoBehaviour
         {
             NetworkManager.Singleton.StartClient();
         }
-
-        NetworkManager.Singleton.GetComponent<UnityTransport>().SetConnectionData(
-            ipAdress,  // The IP address is a string
-            port, // The port number is an unsigned short
-            "0.0.0.0" // The server listen address is a string.
-        );
     }
 
 }

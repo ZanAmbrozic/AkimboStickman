@@ -4,6 +4,6 @@ using UnityEngine;
 [Serializable]
 public class NetOptions
 {
-    public string ipAdress;
+    public string ipAddress;
     public ushort port;
 }
