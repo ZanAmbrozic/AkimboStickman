@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class WinManager : MonoBehaviour
 {
     private bool _inProgress;
     private bool _ended;
+
+    public Transform p1Spawn;
+    public Transform p2Spawn;
 
     private void Start()
     {
@@ -19,6 +23,10 @@ public class WinManager : MonoBehaviour
     {
         if (_inProgress == false && GameObject.FindGameObjectsWithTag("Player").Length >= 2)
         {
+            GameObject.FindGameObjectsWithTag("Player")[0].transform.position = p1Spawn.position;
+            GameObject.FindGameObjectsWithTag("Player")[1].transform.position = p2Spawn.position;
+
+            GameObject.FindGameObjectsWithTag("Player")[1].transform.Find("Canvas").Find("HealthBar").Find("Fill").gameObject.GetComponent<Image>().color = new Color(0.831f, 0.216f, 0.216f, 1);
             _inProgress = true;
         }
 
