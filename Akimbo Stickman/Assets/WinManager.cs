@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Tutorials.Core.Editor;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -23,8 +25,19 @@ public class WinManager : MonoBehaviour
     {
         if (_inProgress == false && GameObject.FindGameObjectsWithTag("Player").Length >= 2)
         {
+            //Resets player positions
             GameObject.FindGameObjectsWithTag("Player")[0].transform.position = p1Spawn.position;
             GameObject.FindGameObjectsWithTag("Player")[1].transform.position = p2Spawn.position;
+
+
+            //Spawns obstacle
+            string map = DataManager.instance.map;
+            if (map.IsNullOrEmpty())
+            {
+                map = "Type1";
+            }
+            GameObject.Find("Obstacles").transform.Find(map).gameObject.SetActive(true);
+
 
             GameObject.FindGameObjectsWithTag("Player")[1].transform.Find("Canvas").Find("HealthBar").Find("Fill").gameObject.GetComponent<Image>().color = new Color(0.831f, 0.216f, 0.216f, 1);
             _inProgress = true;

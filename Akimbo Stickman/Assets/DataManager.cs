@@ -8,6 +8,7 @@ public class DataManager : MonoBehaviour
     public NetOptions netOptions = new NetOptions();
     public string connType;
     private ulong _winner;
+    public string map;
 
     private void Awake()
     {
