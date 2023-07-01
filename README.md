@@ -1,2 +1,2 @@
 # AkimboStickman
-Repository for a game I am working on.
+Repository for a game I made as a final high school project.
