@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.Tutorials.Core.Editor;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -32,7 +31,7 @@ public class WinManager : MonoBehaviour
 
             //Spawns obstacle
             string map = DataManager.instance.map;
-            if (map.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(map))
             {
                 map = "Type1";
             }
